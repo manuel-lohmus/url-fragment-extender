@@ -1,0 +1,8 @@
+[
+  {
+    "outputFileName": "browser.min.js",
+    "inputFiles": [
+      "browser.js"
+    ]
+  }
+]

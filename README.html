@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>url-fragment-extender: Url fragment extender library for browser.</title>
+    <link href="/assets/md-css/md-styles.css" rel="stylesheet" />
+</head>
+<body class="markdown-body">
+
+    <h1 id="url-fragment-extender-url-fragment-extender-library-for-browser">url-fragment-extender: Url fragment extender library for browser.</h1>
+<p><a href="https://www.npmjs.com/package/url-fragment-extender"><img src="https://badgen.net/npm/v/url-fragment-extender" alt="npm-version" /></a>
+<a href="https://www.npmjs.com/package/url-fragment-extender"><img src="https://badgen.net/npm/dw/url-fragment-extender" alt="npm-week-downloads" /></a></p>
+<p>Url fragment extender library for browser.</p>
+<h2 id="installing">Installing</h2>
+<p><code>&lt;script src=&quot;https://unpkg.com/url-fragment-extender&quot; &gt;&lt;/script&gt;</code></p>
+<p>or</p>
+<p><code>&lt;script src=&quot;https://cdn.jsdelivr.net/npm/url-fragment-extender&quot; &gt;&lt;/script&gt;</code></p>
+<h2 id="usage-example">Usage example</h2>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot; /&gt;
+    &lt;title&gt;Test&lt;/title&gt;
+    &lt;script src=&quot;https://unpkg.com/url-fragment-extender&quot; &gt;&lt;/script&gt;
+    &lt;script&gt;
+        addEventListener(&quot;load&quot;, function (ev) {
+            // add your code here
+            UFE.Commands.set_body = function (val) { document.body.innerHTML = val; };
+        });
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    Test
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>Navigate to the URL:
+<code>'https://example.com/#set_body=body_content'</code> or
+<code>'https://example.com/#print'</code></p>
+<h2 id="license">License</h2>
+<p><a href="LICENSE">MIT</a></p>
+<p>Copyright (c) 2021 Manuel Lõhmus <a href="mailto:manuel@hauss.ee">manuel@hauss.ee</a></p>
+
+
+</body>
+</html>

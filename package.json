@@ -1,0 +1,29 @@
+{
+  "name": "url-fragment-extender",
+  "version": "1.0.0",
+  "description": "Url fragment extender library for browser",
+  "keywords": [
+    "url",
+    "fragment",
+    "extender"
+  ],
+  "author": "Manuel Lõhmus <manuel@hauss.ee>",
+  "license": "MIT",
+  "main": "index.js",
+  "browser": "browser.min.js",
+  "files": [
+    "browser.js",
+    "browser.min.js",
+    "index.js",
+    "LICENSE",
+    "package.json",
+    "README.md",
+    "README.html"
+  ],
+  "homepage": "https://github.com/manuel-lohmus/url-fragment-extender#readme",
+  "bugs": "https://github.com/manuel-lohmus/url-fragment-extender/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manuel-lohmus/url-fragment-extender.git"
+  }
+}

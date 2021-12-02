@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Test</title>
+    <script src="https://unpkg.com/url-fragment-extender" ></script>
+    <script>
+        addEventListener("load", function (ev) {
+            // add your code here
+            UFE.Commands.set_body = function (val) { document.body.innerHTML = val; };
+        });
+    </script>
+</head>
+<body>
+    Test
+</body>
+</html>
