@@ -1,19 +1,21 @@
 {
   "name": "url-fragment-extender",
-  "version": "1.0.0",
-  "description": "Url fragment extender library for browser",
+  "version": "2.0.0-beta.1",
+  "description": "This allows for easy manipulation and extension of URL fragments, as well as handling custom events based on the URL hash.",
+  "license": "MIT",
+  "author": "Manuel LÃµhmus",
+  "browser": "browser.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "keywords": [
     "url",
     "fragment",
     "extender"
   ],
-  "author": "Manuel Lõhmus <manuel@hauss.ee>",
-  "license": "MIT",
-  "main": "index.js",
-  "browser": "browser.min.js",
   "files": [
     "browser.js",
-    "browser.min.js",
     "index.js",
     "LICENSE",
     "package.json",
