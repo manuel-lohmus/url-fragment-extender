@@ -1,1 +1,1 @@
-throw new Error("'url-fragment-extender' does not work in the node.js.");
+throw new Error("`url-fragment-extender` does not work in the nodejs.");
