@@ -20,7 +20,8 @@
                         .split(/[&|;]/g)
                         .forEach(function (key_val) {
                             var [key, val] = key_val.split('=');
-                            UFE.emit(key, val || '', hash);
+                            UFE.emit(key, { key, value: val || '', fragment: hash });
+                            UFE.emit('-', { key, value: val || '', fragment: hash });
                         });
                 }
             },

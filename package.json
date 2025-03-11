@@ -1,6 +1,6 @@
 {
   "name": "url-fragment-extender",
-  "version": "2.0.0-beta.2",
+  "version": "2.0.0-beta.3",
   "description": "This allows for easy manipulation and extension of URL fragments, as well as handling custom events based on the URL hash.",
   "license": "MIT",
   "author": "Manuel Lõhmus",

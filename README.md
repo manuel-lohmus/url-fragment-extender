@@ -59,25 +59,25 @@ Here is also a [DEMO](https://manuel-lohmus.github.io/url-fragment-extender/inde
         // STEP 3. Import the module.
         importModules(['url-fragment-extender'], function (UFE) {
 
-            UFE.on('', function (val, fragment) {
+            UFE.on('', function (event) {
                 $('#content').innerHTML = '';
                 //I am live. Continue listening.
                 return true;
             });
 
-            UFE.on('temp_1', function (val, fragment) {
+            UFE.on('temp_1', function (event) {
                 $('#content').innerHTML = $('#temp_1').innerHTML;
                 //I am live. Continue listening.
                 return true;
             });
 
-            UFE.on('temp_2', function (val, fragment) {
+            UFE.on('temp_2', function (event) {
                 $('#content').innerHTML = $('#temp_2').innerHTML;
                 //I am live. Continue listening.
                 return true;
             });
 
-            UFE.on('temp_3', function (val, fragment) {
+            UFE.on('temp_3', function (event) {
                 $('#content').innerHTML = $('#temp_3').innerHTML;
                 //I am live. Continue listening.
                 return true;
