@@ -169,7 +169,7 @@ Here is also a [DEMO](https://manuel-lohmus.github.io/url-fragment-extender/inde
 
 This project is licensed under the MIT License.
 
-Copyright &copy; 2024 Manuel Lõhmus
+Copyright &copy; Manuel Lõhmus
 
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate?hosted_button_id=SA5RPUB5GKBB2)
 
