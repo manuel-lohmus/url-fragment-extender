@@ -14,11 +14,14 @@
 // event: 'hrefActive' -> { href } -> The href is the name of the event, and href is the full URL fragment.
 (function () {
 
-    exportModule('url-fragment-extender', ['data-context-binding'], function factory(dataContextBinding) {
+    exportModule('url-fragment-extender', [], function factory() {
 
-        var isDebug = document && Array.from(document.scripts).find(function (s) { return s.src.includes('url-fragment-extender'); }).attributes.debug || false;
+        var globalScope = this,
+            isDebug = document && Array.from(document.scripts).find(function (s) { return s.src.includes('url-fragment-extender'); }).attributes.debug || false;
 
-        this.UFE = Object.create(null, {
+        globalScope.UFE = Object.create(null, {
+
+            DB: { get: getDB, configurable: false, enumerable: false },
 
             indexContentURL: { value: 'templates/landing.html', writable: true, configurable: false, enumerable: false },
 
@@ -133,9 +136,9 @@
         addEventListener("hashchange", handleHash);
         waitForReadyState("complete", handleFragment);
 
-        return this.UFE;
+        return globalScope.UFE;
 
-
+        function getDB() { return globalScope.modules['data-context-binding'] || null }
         function waitForReadyState(state, cb) {
 
             if (document.readyState == state)
@@ -177,7 +180,7 @@
                 var contentContainer = clearElement(containerElement);
                 contentContainer.setAttribute('content_url', contentURL);
                 contentContainer.setAttribute('template', contentURL);
-                dataContextBinding.bindAllElements(contentContainer);
+                getDB()?.bindAllElements(contentContainer);
             }
         }
         function renderIframe(pageURL) {
@@ -207,7 +210,7 @@
         function setMenuItemActive(href = '') {
 
             var containerElement = document.querySelector(UFE.navigationLinksContainerSelector),
-                activeLinks = containerElement?.querySelectorAll(".active");
+                activeLinks = containerElement?.querySelectorAll(".active") || [];
 
             clearTimeout(setMenuItemActive.timeout);
             setMenuItemActive.counter = 0;
@@ -217,7 +220,7 @@
 
             function activeLink() {
 
-                var deactiveLinks = containerElement?.querySelectorAll('[href="#' + encodeURI(href) + '"]');
+                var deactiveLinks = containerElement?.querySelectorAll('[href="#' + encodeURI(href) + '"]') || [];
 
                 // If the element is not found, wait for 200ms and try again.
                 if (!deactiveLinks.length) {
@@ -246,7 +249,7 @@
             var div = document.createElement('div');
             document.body.appendChild(div);
             div.innerHTML = strHTML;
-            dataContextBinding.bindAllElements(div);
+            getDB()?.bindAllElements(div);
             var modalElement = div.querySelector('.modal');
             modalElement.addEventListener('hidden.bs.modal', function (event) {
                 setTimeout(function () { document.body.removeChild(div); });
