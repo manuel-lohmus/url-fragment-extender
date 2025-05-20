@@ -220,13 +220,15 @@
 
             function activeLink() {
 
+                if (href.startsWith('#')) { href = href.substring(1); }
+
                 var deactiveLinks = containerElement?.querySelectorAll('[href="#' + encodeURI(href) + '"]') || [];
 
                 // If the element is not found, wait for 200ms and try again.
                 if (!deactiveLinks.length) {
 
                     setMenuItemActive.counter++;
-                    if (setMenuItemActive.counter > 10) { return; }
+                    if (setMenuItemActive.counter > 10) { location.hash = ''; return; }
                     setMenuItemActive.timeout = setTimeout(activeLink, 200);
 
                     return;
@@ -276,7 +278,7 @@
                 pDebug(
                     'Alert container not found. ' +
                     'Please add an element with the ID \'alert-message-container\' to your HTML. ' + 
-                    'Example: <div id="alert - message - container" class="position - fixed top - 0 start - 50 translate - middle - x w - 75  mt - 5 mx - 3" style="z - index: 1080"></div> ' +
+                    'Example: <div id="alert-message-container" class="position-fixed top-0 start-50 translate-middle-x w-75  mt-5 mx-3" style="z-index: 1080"></div>' +
                     'Or use the \'alertMessageSelector\' property to set a custom selector.'
                 );
 
