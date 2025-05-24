@@ -1,11 +1,19 @@
+<div class="row w-100">
+<div class="col-12 text-center">
 
+# URL Fragment Extender
+This allows for easy manipulation and extension of URL fragments,<br> 
+as well as handling custom events based on the URL hash.<br>
+This manual is also available in [HTML5](https://manuel-lohmus.github.io/url-fragment-extender/README.html).
+
+</div>
+</div>
 <div class="row w-100">
 <div class="col-lg-3 d-lg-inline">
 <div class="sticky-top overflow-auto vh-lg-100">
 <div id="list-headers" class="list-group mt-2 ms-lg-2 ms-4">
 
 #### Table of contents
-- [**URL Fragment Extender**](#url-fragment-extender)
 - [**Description**](#description)
 - [**Installation**](#installation)
 - [**Usage**](#usage)
@@ -18,13 +26,12 @@
 <div class="col-lg-9 mt-2">
 <div class="ps-4 markdown-body" data-bs-spy="scroll" data-bs-target="#list-headers" data-bs-offset="0" tabindex="0">
 
-# URL Fragment Extender
-This allows for easy manipulation and extension of URL fragments, as well as handling custom events based on the URL hash.<br>
-This manual is also available in [HTML5](https://manuel-lohmus.github.io/url-fragment-extender/README.html).
-
 ## Description
 The module `url-fragment-extender` that provides functionality to read and manipulate URL fragments. 
 It includes an event emitter to handle custom events and listens for changes in the URL hash.
+This module is part of the ['conextra'](https://www.npmjs.com/package/conextra) framework,
+which is a simple and easy-to-use single-page application (SPA) framework.
+You have to try it! A different solution than MVC (model–view–controller).
 
 ## Installation
 

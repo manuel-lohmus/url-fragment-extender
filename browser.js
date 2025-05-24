@@ -31,7 +31,7 @@
 
             alertMessageSelector: { value: '#alert-message-container', writable: true, configurable: false, enumerable: false },
 
-            renderIndexContent: { value: function () { handleFragment(UFE.indexContentURL); }, writable: false, configurable: false, enumerable: false },
+            renderIndexContent: { value: renderIndexContent, writable: false, configurable: false, enumerable: false },
 
             handleFragment: { value: handleFragment, writable: false, configurable: false, enumerable: false },
 
@@ -146,7 +146,19 @@
             else
                 setTimeout(waitForReadyState, 0, state, cb);
         }
-        function handleHash({ newURL, oldURL }) { return handleFragment(); }
+        function handleHash({ newURL, oldURL }) {
+
+            return handleFragment();
+        }
+        function renderIndexContent(ignoreActiveLink = false) {
+
+            var activeLink = document.querySelector(UFE.navigationLinksContainerSelector)
+                ?.querySelector(".active")?.getAttribute('href') || '';
+
+            if (activeLink && !ignoreActiveLink) { return handleFragment(activeLink); }
+
+            return handleFragment(UFE.indexContentURL);
+        }
         function handleFragment(fragment = location.hash) {
 
             var frgParts = fragment.slice(1).split(/[&|;]/g);
