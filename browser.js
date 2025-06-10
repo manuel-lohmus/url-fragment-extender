@@ -23,11 +23,9 @@
 
             DB: { get: getDB, configurable: false, enumerable: false },
 
-            indexContentURL: { value: 'templates/landing.html', writable: true, configurable: false, enumerable: false },
+            indexContentURL: { value: ':templates/landing.html', writable: true, configurable: false, enumerable: false },
 
             mainContainerSelector: { value: '#main-container', writable: true, configurable: false, enumerable: false },
-
-            navigationLinksContainerSelector: { value: '#navigation-links-container', writable: true, configurable: false, enumerable: false },
 
             alertMessageSelector: { value: '#alert-message-container', writable: true, configurable: false, enumerable: false },
 
@@ -133,8 +131,11 @@
             }
         });
 
-        addEventListener("hashchange", handleHash);
-        waitForReadyState("complete", handleFragment);
+        waitForReadyState("complete", function () {
+
+            handleFragment();
+            addEventListener("hashchange", handleHash);
+        });
 
         return globalScope.UFE;
 
@@ -148,41 +149,75 @@
         }
         function handleHash({ newURL, oldURL }) {
 
-            return handleFragment();
+            return handleFragment(getFragment(newURL), getFragment(oldURL));
+
+            function getFragment(url) {
+
+                var i = url.indexOf('#');
+
+                if (i < 0) { return '#'; }
+
+                return url.substring(i);
+            }
         }
         function renderIndexContent(ignoreActiveLink = false) {
 
-            var activeLink = document.querySelector(UFE.navigationLinksContainerSelector)
-                ?.querySelector(".active")?.getAttribute('href') || '';
-
-            if (activeLink && !ignoreActiveLink) { return handleFragment(activeLink); }
+            if (!ignoreActiveLink) { return handleFragment(); }
 
             return handleFragment(UFE.indexContentURL);
         }
-        function handleFragment(fragment = location.hash) {
+        function handleFragment(newFragment = location.hash, oldFragment = '#') {
 
-            var frgParts = fragment.slice(1).split(/[&|;]/g);
+            var newFrgParts = decodeURI(newFragment).slice(1).split(/[&|;]/g),
+                oldFrgParts = decodeURI(oldFragment).slice(1).split(/[&|;]/g);
 
+            if (!newFrgParts[0] || newFrgParts[0] === UFE.indexContentURL) { newFrgParts[0] = ':'; }
+            if (newFrgParts[0].startsWith(":")) { renderContent(UFE.indexContentURL); }
+            else if (newFrgParts[0].startsWith("!")) { renderIframe(newFrgParts[0].slice(1)); }
+            else if (/^:(?![:~!])/.test(newFrgParts[0])) { renderContent(newFrgParts[0].slice(1)); }
+            else {
 
-            if (!frgParts[0] && frgParts.length < 2) { renderContent(UFE.indexContentURL); }
-            else if (frgParts[0].startsWith("!")) { renderIframe(frgParts[0].slice(1)); }
-            else if (/^:(?![:~!])/.test(frgParts[0])) { renderContent(frgParts[0].slice(1)); }
+                var content_url = document.querySelector(UFE.mainContainerSelector)?.getAttribute('content_url');
 
-            setTimeout(function () {
+                if (!content_url) { renderContent(UFE.indexContentURL); }
+                else { renderContent(content_url); }
+            }
 
-                setMenuItemActive(frgParts[0]);
+            newFrgParts.forEach(function (key_val) {
 
-                frgParts.forEach(function (key_val) {
-
-                    var [key, val] = key_val.split('=');
-                    UFE.emit(key, { key, value: val || '', fragment });
-                    UFE.emit('-', { key, value: val || '', fragment });
-                });
+                var [key, val] = key_val.split('=');
+                setKeyValueToDataContext(key, val);
+                UFE.emit(key, { key, value: val || '', newFragment, oldFragment });
+                UFE.emit('-', { key, value: val || '', newFragment, oldFragment });
             });
 
-            return fragment;
+            setMenuItemActive(newFrgParts[0], oldFrgParts[0]);
+
+            return newFragment;
+
+
+            function setKeyValueToDataContext(key, val) {
+
+                if (typeof key !== 'string' || key[0] !== '.' || typeof val !== 'string') { return; }
+
+                if (!window.datacontext) { return; }
+
+                var keyParts = key.split('.').slice(1),
+                    dataContext = window.datacontext;
+
+                while (keyParts.length > 1) {
+
+                    if (dataContext[keyParts[0]] === undefined) { dataContext[keyParts[0]] = {}; }
+
+                    dataContext = dataContext[keyParts.shift()];
+                }
+
+                dataContext[keyParts[0]] = val;
+            }
         }
         function renderContent(contentURL) {
+
+            if (!contentURL || contentURL === ':') { contentURL = UFE.indexContentURL; }
 
             var containerElement = document.querySelector(UFE.mainContainerSelector),
                 content_url = containerElement?.getAttribute('content_url');
@@ -198,14 +233,25 @@
         function renderIframe(pageURL) {
 
             var containerElement = document.querySelector(UFE.mainContainerSelector),
-                contentid = containerElement?.getAttribute('content_url');
+                content_url = containerElement?.getAttribute('content_url');
 
-            if (containerElement && contentid !== pageURL) {
+            if (containerElement && content_url !== pageURL) {
 
-                    var contentContainer = clearElement(containerElement);
-                    contentContainer.setAttribute('contentid', pageURL);
-                    contentContainer.insertAdjacentHTML('beforeend', `<iframe src="${pageURL}"></iframe>`);
+                var contentContainer = clearElement(containerElement);
+                contentContainer.setAttribute('content_url', pageURL);
+                contentContainer.insertAdjacentHTML('beforeend', `<iframe src="${pageURL}" scrolling="no"></iframe>`);
+
+                var iframe = contentContainer.querySelector('iframe');
+                iframe.contentWindow.addEventListener('resize', calcIframeHeight);
+                iframe.onload = calcIframeHeight;
+
+
+                function calcIframeHeight() {
+
+                    iframe.style.height = iframe.contentWindow.document.documentElement.offsetHeight + 'px';
+                    contentContainer.style.height = iframe.style.height;
                 }
+            }
         }
         function clearElement(element) {
 
@@ -214,33 +260,49 @@
                 element.removeAttribute('content_url');
                 element.removeAttribute('template');
                 element.innerHTML = '';
+                element.style.height = '';
+                element.style.minHeight = '';
                 element.bindingContext?.isActive(false);
             }
 
             return element;
         }
-        function setMenuItemActive(href = '') {
+        function setMenuItemActive(newHref = '', oldHref = '') {
 
-            var containerElement = document.querySelector(UFE.navigationLinksContainerSelector),
-                activeLinks = containerElement?.querySelectorAll(".active") || [];
+            if (newHref === ':') { newHref = ''; }
+            if (oldHref === ':') { oldHref = ''; }
 
-            clearTimeout(setMenuItemActive.timeout);
+            deactiveLink();
             setMenuItemActive.counter = 0;
-            activeLinks.forEach(function (old) { old.classList.remove('active'); });
+            clearTimeout(setMenuItemActive.timeout);
             activeLink();
+            loginActiveLink();
 
 
+            function deactiveLink() {
+
+                var activeLinks = document.querySelectorAll('[href="#' + encodeURI(oldHref) + '"]') || [];
+
+                activeLinks.forEach(function (old) { old.classList.remove('active'); });
+            }
             function activeLink() {
 
-                if (href.startsWith('#')) { href = href.substring(1); }
+                //if (newHref.startsWith('#')) { newHref = newHref.substring(1); }
 
-                var deactiveLinks = containerElement?.querySelectorAll('[href="#' + encodeURI(href) + '"]') || [];
+                var deactiveLinks = document.querySelectorAll('[href="#' + encodeURI(newHref) + '"]') || [];
 
                 // If the element is not found, wait for 200ms and try again.
                 if (!deactiveLinks.length) {
 
                     setMenuItemActive.counter++;
-                    if (setMenuItemActive.counter > 10) { location.hash = ''; return; }
+
+                    if (setMenuItemActive.counter > 10) {
+
+                        deactiveLinks = document.querySelectorAll('[href="#' + encodeURI(newHref) + '"]') || [];
+
+                        return;
+                    }
+
                     setMenuItemActive.timeout = setTimeout(activeLink, 200);
 
                     return;
@@ -248,7 +310,27 @@
 
                 deactiveLinks.forEach(function (item) { item.classList.add('active'); });
 
-                UFE.emit('hrefActive', { href });
+                UFE.emit('hrefActive', { href: newHref });
+            }
+            function loginActiveLink() {
+
+                if (loginActiveLink.isInit) { return; }
+
+                if (window.datacontext?.user) { 
+
+                    loginActiveLink.isInit = true;
+                    window.datacontext.user.on('isLogged', function (event) {
+
+                        clearTimeout(loginActiveLink.timeout);
+                        loginActiveLink.timeout = setTimeout(function () {
+
+                            deactiveLink();
+                            activeLink();
+                        }, 1000);
+
+                        return true;
+                    });
+                }
             }
         }
         function openModal(template) {
