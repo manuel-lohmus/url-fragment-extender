@@ -172,7 +172,7 @@
                 oldFrgParts = decodeURI(oldFragment).slice(1).split(/[&|;]/g);
 
             if (!newFrgParts[0] || newFrgParts[0] === UFE.indexContentURL) { newFrgParts[0] = ':'; }
-            if (newFrgParts[0].startsWith(":")) { renderContent(UFE.indexContentURL); }
+            if (newFrgParts[0] === ':') { renderContent(UFE.indexContentURL); }
             else if (newFrgParts[0].startsWith("!")) { renderIframe(newFrgParts[0].slice(1)); }
             else if (/^:(?![:~!])/.test(newFrgParts[0])) { renderContent(newFrgParts[0].slice(1)); }
             else {
